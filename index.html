@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101512">
+  <title>荆棘誓约 · 黑棘森林</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./style.css">
+  <script defer src="./art.js"></script>
+  <script defer src="./forest.js"></script>
+  <script defer src="./characters.js"></script>
+  <script defer src="./gameplay.js"></script>
+  <script defer src="./app.js"></script>
+</head>
+<body>
+<svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <symbol id="brand-mark" viewBox="0 0 48 48"><path d="m24 1 3 6-2 20-1 5-1-5-2-20zM9 10l9 5 2 14-4-6zM39 10l-9 5-2 14 4-6zM3 15l9 7 5 10 7 4 7-4 5-10 9-7-6 15-9 9-6 3-6-3-9-9z" fill="currentColor"/><path d="m24 38 3 3-3 6-3-6z" fill="currentColor"/></symbol>
+    <symbol id="mountain" viewBox="0 0 24 24"><path d="m2 19 7-11 4 6 3-9 6 14ZM7 12l2 2 2-2m3-2 2 2 2-1"/></symbol>
+    <symbol id="keys" viewBox="0 0 24 24"><rect x="2" y="5.5" width="20" height="13" rx="2"/><path d="M5 9h1m2 0h1m2 0h1m2 0h1m2 0h1M5 12h1m2 0h1m2 0h1m2 0h1m2 0h1M8 15h8"/></symbol>
+    <symbol id="volume" viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3zm12-1q4 4 0 8m3-11q6 7 0 14"/></symbol>
+    <symbol id="mute" viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3zm13 0 6 6m0-6-6 6"/></symbol>
+    <symbol id="pause-bars" viewBox="0 0 24 24"><path d="M8 5v14m8-14v14" stroke-width="3"/></symbol>
+    <symbol id="play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7z"/></symbol>
+    <symbol id="close" viewBox="0 0 24 24"><path d="m5 5 14 14m0-14L5 19"/></symbol>
+    <symbol id="target" viewBox="0 0 24 24"><path d="m12 2 8 10-8 10-8-10Z"/><path d="m12 7 4 5-4 5-4-5z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="heart" viewBox="0 0 24 24"><path d="M12 21 3 12C-1 5 7 1 12 7c5-6 13-2 9 5Z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="fire" viewBox="0 0 24 24"><path d="M13 1c3 6-2 7 1 11l3-4c6 8 1 15-5 15-7 0-11-7-5-14 0 5 3 5 3 5-2-5 3-8 3-13Z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="gem" viewBox="0 0 24 24"><path d="m12 1 9 11-9 11-9-11z"/><path d="m12 5 5 7-5 7-5-7z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="left-mouse" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="7"/><path d="M5 11h14m-7-9v9"/><path d="M7 9c0-3 1.5-5 3.5-5.5V9Z" fill="currentColor"/></symbol>
+    <symbol id="right-mouse" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="7"/><path d="M5 11h14m-7-9v9"/><path d="M17 9c0-3-1.5-5-3.5-5.5V9Z" fill="currentColor"/></symbol>
+    <symbol id="cross-swords" viewBox="0 0 24 24"><path d="m3 2 4 1 12 14-2 2L4 6ZM18 3l3-1-1 5-6 6-2-2ZM9 15l-5 6m-2-5 5 5m8-3 6-5m-3 5 4 4"/></symbol>
+  </defs>
+</svg>
+<header class="topbar">
+  <div class="brand"><svg class="emblem"><use href="#brand-mark"/></svg><div><h1>荆棘誓约</h1><span>THORNBOUND</span></div></div>
+  <div class="region"><i></i><svg class="icon"><use href="#mountain"/></svg><span>黑棘森林</span><i></i></div>
+  <nav aria-label="战斗设置">
+    <button class="guide-button" id="guide"><svg class="icon"><use href="#keys"/></svg><span>操作指南</span></button>
+    <button class="tool-button" id="sound" aria-label="关闭音效" aria-pressed="true" title="关闭音效"><svg class="icon"><use href="#volume"/></svg></button>
+    <button class="tool-button" id="pause" aria-label="暂停战斗" title="暂停战斗 (Esc)"><svg class="icon"><use href="#pause-bars"/></svg></button>
+  </nav>
+</header>
+
+<main class="arena" id="arena" aria-label="黑棘森林战场">
+  <canvas id="world" aria-label="森林战斗，使用 WASD 移动，鼠标左键挥剑"></canvas>
+  <div class="atmosphere"></div>
+  <div class="objective">
+    <div class="objective-eyebrow"><svg class="icon"><use href="#target"/></svg><span>战斗目标</span><i></i></div>
+    <h2>讨伐半兽人统领</h2>
+    <div class="objective-progress"><span class="pips"><i></i><i></i><i></i></span>已击败 <b id="kills">0 / 3</b></div>
+  </div>
+  <div class="radar-wrap"><canvas id="radar" width="276" height="276" aria-label="小地图，红色标记为敌人"></canvas></div>
+  <div id="nameplates" class="world-ui"></div>
+  <div id="damage-layer" class="world-ui"></div>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <div class="key-strip">
+    <span><kbd>WASD</kbd> 移动</span><span><svg class="icon"><use href="#left-mouse"/></svg> 普攻</span>
+    <span><svg class="icon"><use href="#right-mouse"/></svg> 格挡</span><span><kbd>SPACE</kbd> 闪避</span>
+  </div>
+  <div class="touch-move" id="touch-move" aria-label="移动摇杆"><i></i></div>
+  <div class="touch-attack"><button data-action="dodge">闪避</button><button data-action="block">格挡</button><button data-action="attack">普攻</button></div>
+  <div id="damage-flash"></div>
+  <div id="loading" class="loading"><div class="load-emblem">◇</div><span>正在进入黑棘森林…</span></div>
+</main>
+
+<footer class="combat-hud" aria-label="战斗状态与技能">
+  <section class="vitals" aria-label="英雄状态">
+    <div class="portrait-frame"><canvas data-art="portrait" width="180" height="202" aria-hidden="true"></canvas><b></b></div>
+    <div class="vital-data">
+      <div class="hero-title"><h2>剑盾战士</h2><small>VANGUARD</small></div>
+      <div class="stat"><svg class="icon heart"><use href="#heart"/></svg><span>生命</span><div class="meter health"><i id="health-fill"></i></div><b id="health-number">100 / 100</b></div>
+      <div class="stat"><svg class="icon fire"><use href="#fire"/></svg><span>怒气</span><div class="meter fury"><i id="rage-fill"></i></div><b id="rage-number">0 / 100</b></div>
+    </div>
+  </section>
+  <section class="fury-points" title="每积满 100 怒气获得 1 点，最多储存 3 点">
+    <div class="section-title"><h2>怒气点</h2><span id="point-count">0 / 3</span></div>
+    <div class="gems"><i></i><b></b><i></i><b></b><i></i></div>
+    <small class="point-hint">近战蓄满获得 1 点</small>
+  </section>
+  <section class="abilities" aria-label="战斗技能">
+    <button class="ability amber" data-skill="1" aria-label="1 点怒气技能，突进斩"><span class="art-frame"><canvas data-art="lunge" width="160" height="160"></canvas></span><kbd>1</kbd><span class="ability-copy"><b>突进斩</b><small>◆<span>1 点</span></small></span><span class="tip"><b>突进斩</b>冲向前方敌人，挥剑近身重击。</span></button>
+    <button class="ability cyan" data-skill="2" aria-label="2 点怒气技能，回旋飞盾"><span class="art-frame"><canvas data-art="shield" width="160" height="160"></canvas></span><kbd>2</kbd><span class="ability-copy"><b>回旋飞盾</b><small>◆<span>2 点</span></small></span><span class="tip"><b>回旋飞盾</b>投盾依次击中至多两名敌人，随后飞回手中。</span></button>
+    <button class="ability violet" data-skill="3" aria-label="3 点怒气技能，旋风斩"><span class="art-frame"><canvas data-art="whirl" width="160" height="160"></canvas></span><kbd>3</kbd><span class="ability-copy"><b>旋风斩</b><small>◆<span>3 点</span></small></span><span class="tip"><b>旋风斩</b>持剑旋转，连续斩击身边的敌人。</span></button>
+  </section>
+</footer>
+
+<div class="veil" id="veil" hidden>
+  <section class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
+    <button class="dialog-close tool-button" id="dialog-close" aria-label="关闭"><svg class="icon"><use href="#close"/></svg></button>
+    <svg class="dialog-emblem"><use href="#brand-mark"/></svg>
+    <h2 id="dialog-title"></h2><div id="dialog-content"></div>
+    <div id="dialog-actions"></div>
+  </section>
+</div>
+</body>
+</html>
